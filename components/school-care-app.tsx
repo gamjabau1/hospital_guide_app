@@ -3,10 +3,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   AlertTriangle,
+  BookOpen,
   ClipboardList,
   History,
   Phone,
   Settings,
+  ShieldCheck,
   Zap,
 } from "lucide-react"
 import { toast } from "sonner"
@@ -57,21 +59,21 @@ function OptionButton({
   const base =
     variant === "danger"
       ? selected
-        ? "border-red-600 bg-red-50 text-red-900"
-        : "border-red-200 hover:bg-red-50"
+          ? "border-red-600 bg-red-50 text-red-950 shadow-sm"
+        : "border-red-200 bg-white hover:bg-red-50"
       : variant === "safe"
         ? selected
-          ? "border-emerald-600 bg-emerald-50 text-emerald-900"
-          : "border-emerald-200 hover:bg-emerald-50"
+          ? "border-emerald-600 bg-emerald-50 text-emerald-950 shadow-sm"
+          : "border-emerald-200 bg-white hover:bg-emerald-50"
         : selected
-          ? "border-primary bg-primary/5"
-          : "border-border hover:bg-muted/50"
+          ? "border-primary bg-primary/5 text-slate-950 shadow-sm"
+          : "border-slate-200 bg-white hover:bg-slate-50"
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`w-full rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-colors ${base}`}
+      className={`w-full rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${base}`}
     >
       {children}
     </button>
@@ -168,67 +170,126 @@ export function SchoolCareApp() {
     )
   }, [input.triage])
 
+  const cardiacArrestTriage = useMemo(() => {
+    const t = input.triage
+    return (
+      t.noPulse === true ||
+      ((t.collapsed === true || t.noResponse === true) &&
+        t.abnormalBreathing === true)
+    )
+  }, [input.triage])
+
   if (screen === "home") {
     return (
       <ScreenShell title="스쿨케어 SOS" subtitle={`${schoolLabel} 보건실`}>
-        <div className="flex flex-col gap-4">
-          <QuickEntry
-            onResult={(parsed) => {
-              setInput(parsed)
-              finishAndShowResult(parsed)
-            }}
-          />
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <section className="space-y-4">
+            <div className="rounded-lg border border-red-200 bg-white/90 p-4 shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-red-600 text-white">
+                  <ShieldCheck className="size-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-red-950">
+                    의식·호흡·순환 이상이면 앱보다 119가 먼저입니다.
+                  </p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    입력한 내용은 교육부 3C 흐름에 맞춰 Check, Call, Care 순서로 정리됩니다.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <div className="grid grid-cols-3 gap-2">
-            <Button variant="destructive" asChild>
-              <a href="tel:119">119</a>
-            </Button>
-            <Button variant="outline" asChild>
-              <a href="tel:112">112</a>
-            </Button>
-            <Button variant="outline" asChild>
-              <a
-                href={
-                  settings.healthOfficePhone
-                    ? `tel:${settings.healthOfficePhone}`
-                    : "#"
-                }
-                onClick={(e) => {
-                  if (!settings.healthOfficePhone) {
-                    e.preventDefault()
-                    toast.message("설정에서 보건실 전화번호를 입력하세요")
-                    setScreen("settings")
-                  }
+            <QuickEntry
+              onResult={(parsed) => {
+                setInput(parsed)
+                finishAndShowResult(parsed)
+              }}
+            />
+          </section>
+
+          <aside className="space-y-3">
+            <Card className="bg-white/95">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">즉시 연락</CardTitle>
+                <CardDescription>통화 버튼과 학교 설정</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="destructive" className="h-11" asChild>
+                    <a href="tel:119">119</a>
+                  </Button>
+                  <Button variant="outline" className="h-11" asChild>
+                    <a href="tel:112">112</a>
+                  </Button>
+                </div>
+                <Button variant="outline" className="h-11 w-full" asChild>
+                  <a
+                    href={
+                      settings.healthOfficePhone
+                        ? `tel:${settings.healthOfficePhone}`
+                        : "#"
+                    }
+                    onClick={(e) => {
+                      if (!settings.healthOfficePhone) {
+                        e.preventDefault()
+                        toast.message("설정에서 보건실 전화번호를 입력하세요")
+                        setScreen("settings")
+                      }
+                    }}
+                  >
+                    <Phone className="size-4" />
+                    보건실
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <div className="grid gap-2">
+              <Button
+                variant="outline"
+                className="h-11 justify-start bg-white"
+                onClick={() => {
+                  setInput(EMPTY_INPUT())
+                  setResult(null)
+                  setScreen("start")
                 }}
               >
-                <Phone className="size-4" />
-                보건실
-              </a>
-            </Button>
-          </div>
+                <AlertTriangle className="size-4" />
+                단계별 입력
+              </Button>
 
-          <Button
-            variant="outline"
-            className="h-11"
-            onClick={() => {
-              setInput(EMPTY_INPUT())
-              setResult(null)
-              setScreen("start")
-            }}
-          >
-            <AlertTriangle className="size-4" />
-            단계별 입력 (상세·정확)
-          </Button>
+              <Button
+                variant="secondary"
+                className="h-11 justify-start"
+                onClick={() => setScreen("history")}
+              >
+                <History className="size-4" />
+                오늘 처리한 상황 ({history.length})
+              </Button>
 
-          <Button variant="secondary" onClick={() => setScreen("history")}>
-            <History className="size-4" />
-            오늘 처리한 상황 ({history.length})
-          </Button>
+              <Button
+                variant="ghost"
+                className="h-11 justify-start"
+                onClick={() => setScreen("settings")}
+              >
+                <Settings className="size-4" />
+                학교 설정
+              </Button>
+            </div>
 
-          <Button variant="ghost" onClick={() => setScreen("settings")}>
-            <Settings className="size-4" />
-            학교 설정
-          </Button>
+            <Card className="border-teal-200 bg-teal-50/70">
+              <CardContent className="space-y-2 pt-5 text-sm text-teal-950">
+                <div className="flex items-center gap-2 font-semibold">
+                  <BookOpen className="size-4" />
+                  공식 근거
+                </div>
+                <p className="text-teal-900">
+                  교육부 2025 학교 응급상황 대응 가이드라인, 서울시교육청 학생안전매뉴얼, 소방청 응급처치 안전교육을 반영했습니다.
+                </p>
+              </CardContent>
+            </Card>
+          </aside>
         </div>
       </ScreenShell>
     )
@@ -241,7 +302,7 @@ export function SchoolCareApp() {
         subtitle="상황에 맞게 선택하세요"
         onBack={goHome}
       >
-        <div className="flex flex-col gap-3">
+        <div className="mx-auto grid max-w-2xl gap-3 sm:grid-cols-2">
           <OptionButton
             selected={input.mode === "quick"}
             onClick={() => {
@@ -293,7 +354,9 @@ export function SchoolCareApp() {
                 const catId =
                   input.triage.chokingSign === true
                     ? "choking"
-                    : "cardiac-arrest"
+                    : cardiacArrestTriage
+                      ? "cardiac-arrest"
+                      : "consciousness"
                 finishAndShowResult({
                   ...input,
                   categoryId: catId,
@@ -307,8 +370,8 @@ export function SchoolCareApp() {
           </Button>
         }
       >
-        <div className="space-y-5">
-          <Card className="border-amber-300 bg-amber-50">
+        <div className="mx-auto max-w-2xl space-y-5">
+          <Card className="border-amber-300 bg-amber-50/80">
             <CardContent className="pt-4 text-sm text-amber-950">
               「예」가 하나라도 있으면 119·심폐소생술·AED를 검토하세요. (가이드라인
               제1장)
@@ -326,7 +389,7 @@ export function SchoolCareApp() {
           ).map(([key, label]) => (
             <section key={key} className="space-y-2">
               <Label>{label}</Label>
-              <div className="grid grid-cols-2 gap-2">
+          <div className="grid gap-2 sm:grid-cols-2">
                 <OptionButton
                   selected={input.triage[key] === false}
                   onClick={() =>
@@ -373,7 +436,7 @@ export function SchoolCareApp() {
           </Button>
         }
       >
-        <div className="mb-4 grid grid-cols-2 gap-2">
+        <div className="mx-auto mb-4 grid max-w-3xl grid-cols-2 gap-2">
           <div>
             <Label className="text-xs">학년 (선택)</Label>
             <Input
@@ -399,7 +462,7 @@ export function SchoolCareApp() {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-4">
           {CATEGORIES.map((cat) => (
             <OptionButton
               key={cat.id}
@@ -439,7 +502,7 @@ export function SchoolCareApp() {
           </Button>
         }
       >
-        <div className="space-y-4">
+        <div className="mx-auto max-w-2xl space-y-4">
           <p className="text-sm text-muted-foreground">
             가이드라인 Check 항목 중 해당되는 것을 모두 선택하세요. (V = 응급)
           </p>
@@ -454,7 +517,7 @@ export function SchoolCareApp() {
             {cat?.checkFlags.map((flag) => (
               <label
                 key={flag.id}
-                className={`flex cursor-pointer items-start gap-3 rounded-lg border px-3 py-2 ${
+                className={`flex cursor-pointer items-start gap-3 rounded-md border bg-white px-3 py-2 ${
                   flag.tier === "emergency"
                     ? "border-red-200"
                     : flag.tier === "quasi"
@@ -496,7 +559,7 @@ export function SchoolCareApp() {
           </Button>
         }
       >
-        <div className="space-y-4">
+        <div className="mx-auto max-w-2xl space-y-4">
           <section className="space-y-2">
             <Label>발생 장소</Label>
             <div className="flex flex-wrap gap-2">
@@ -520,7 +583,7 @@ export function SchoolCareApp() {
               {ACTIONS_TAKEN.map((action) => (
                 <label
                   key={action}
-                  className="flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2"
+                  className="flex cursor-pointer items-center gap-3 rounded-md border bg-white px-3 py-2"
                 >
                   <Checkbox
                     checked={input.actionsTaken.includes(action)}
@@ -571,16 +634,17 @@ export function SchoolCareApp() {
             </Button>
             {result.call119 && (
               <Button variant="destructive" asChild>
-                <a href="tel:119">119 전화</a>
+                <a href="tel:119">119 전화 또는 이송 상담</a>
               </Button>
             )}
           </div>
         }
       >
-        <div className="space-y-4">
-          <div
-            className={`rounded-xl p-4 text-center ${getLevelColor(result.level)}`}
-          >
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <section className="space-y-4">
+            <div
+              className={`rounded-lg p-4 text-center shadow-sm ${getLevelColor(result.level)}`}
+            >
             <p className="text-lg font-bold">{result.levelLabel}</p>
             <p className="mt-1 text-sm opacity-90">
               {result.guidelineClassLabel}
@@ -588,12 +652,12 @@ export function SchoolCareApp() {
             <p className="mt-2 text-sm opacity-95">{result.levelSummary}</p>
             {result.call119 && (
               <Badge variant="destructive" className="mt-3">
-                119 연락 권장
+                119·응급실 검토
               </Badge>
             )}
-          </div>
+            </div>
 
-          <Tabs defaultValue="three-c" className="w-full">
+            <Tabs defaultValue="three-c" className="w-full">
             <TabsList className="flex h-auto w-full flex-wrap gap-1">
               <TabsTrigger value="three-c">3C</TabsTrigger>
               <TabsTrigger value="level">분류</TabsTrigger>
@@ -601,6 +665,7 @@ export function SchoolCareApp() {
               <TabsTrigger value="roles">역할</TabsTrigger>
               <TabsTrigger value="parent">학부모</TabsTrigger>
               <TabsTrigger value="journal">보건일지</TabsTrigger>
+              <TabsTrigger value="sources">근거</TabsTrigger>
             </TabsList>
 
             <TabsContent value="three-c" className="mt-4 space-y-3">
@@ -641,7 +706,7 @@ export function SchoolCareApp() {
                   </p>
                   <p>
                     119:{" "}
-                    <strong>{result.call119 ? "신고·권장" : "필요 시"}</strong>
+                    <strong>{result.call119 ? "신고·이송 검토" : "필요 시"}</strong>
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {GUIDELINE_SOURCE}
@@ -696,9 +761,31 @@ export function SchoolCareApp() {
               <CopyBlock label="보건일지 기록" text={result.healthJournal} />
             </TabsContent>
 
-          </Tabs>
+            <TabsContent value="sources" className="mt-4 space-y-2">
+              {result.sources.map((source) => (
+                <Card key={source.id}>
+                  <CardContent className="space-y-1 pt-5 text-sm">
+                    <p className="font-semibold">
+                      {source.institution} · {source.title}
+                    </p>
+                    <p className="text-muted-foreground">{source.note}</p>
+                    <a
+                      href={source.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex text-xs font-medium text-primary underline-offset-4 hover:underline"
+                    >
+                      자료 열기
+                    </a>
+                  </CardContent>
+                </Card>
+              ))}
+            </TabsContent>
 
-          <Card>
+            </Tabs>
+          </section>
+
+          <Card className="h-fit bg-white/95 lg:sticky lg:top-20">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-base">
                 <ClipboardList className="size-4" />
@@ -732,7 +819,7 @@ export function SchoolCareApp() {
             저장된 기록이 없습니다.
           </p>
         ) : (
-          <div className="space-y-2">
+          <div className="mx-auto max-w-2xl space-y-2">
             {history.map((item) => (
               <Card
                 key={item.id}

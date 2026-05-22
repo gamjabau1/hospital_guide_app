@@ -5,7 +5,7 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "스쿨케어 SOS",
   description:
-    "교육부 학교 응급상황 대응 가이드라인 기반 3C 응급 보조 앱",
+    "한국 공식기관 응급처치 자료 기반 학교 3C 응급 대응 보조 앱",
   generator: "스쿨케어 SOS",
 }
 
@@ -13,7 +13,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#dc2626",
+  themeColor: "#c81e1e",
 }
 
 export default function RootLayout({

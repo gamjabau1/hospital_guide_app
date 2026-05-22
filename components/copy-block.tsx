@@ -28,7 +28,7 @@ export function CopyBlock({ label, text }: CopyBlockProps) {
           복사
         </Button>
       </div>
-      <pre className="max-h-48 overflow-auto whitespace-pre-wrap rounded-lg border bg-muted/40 p-3 text-sm leading-relaxed">
+      <pre className="max-h-56 overflow-auto whitespace-pre-wrap rounded-md border bg-slate-50 p-3 text-sm leading-relaxed">
         {text}
       </pre>
     </div>

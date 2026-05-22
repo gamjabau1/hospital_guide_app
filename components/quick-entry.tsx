@@ -44,9 +44,9 @@ export function QuickEntry({ onResult }: QuickEntryProps) {
     }
     const { input, meta } = parseQuickText(value)
     if (meta.confidence === "low") {
-      toast.message("분류가 불확실합니다. 결과 확인 후 필요하면 단계별 입력을 이용하세요.")
+      toast.message("분류가 불확실합니다. 결과에서 확인한 뒤 필요하면 단계별 입력을 사용하세요.")
     } else {
-      toast.success(`${meta.categoryLabel}으로 분석했습니다`, {
+      toast.success(`${meta.categoryLabel} 상황으로 분석했습니다`, {
         description: meta.hints.join(" · "),
       })
     }
@@ -95,27 +95,27 @@ export function QuickEntry({ onResult }: QuickEntryProps) {
     recognitionRef.current = recognition
     recognition.start()
     setListening(true)
-    toast.message("말씀해 주세요…")
+    toast.message("말씀해 주세요")
   }
 
   return (
-    <Card className="border-primary/40 shadow-md">
-      <CardHeader className="pb-3">
+    <Card className="border-red-200 bg-white/95 shadow-sm">
+      <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Sparkles className="size-5 text-primary" />
-          바로 말하기 · 입력
+          빠른 상황 입력
         </CardTitle>
         <CardDescription>
-          상황을 글 또는 음성으로 적으면 바로 3C 결과를 보여 줍니다. (클릭 단계 생략)
+          한 문장으로 적으면 3C 결과와 응급 등급을 바로 정리합니다.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <Textarea
-          placeholder="예: 체육 시간에 3학년 학생이 쓰러졌고 반응이 없어요. 호흡이 이상해요."
+          placeholder="예: 체육 시간에 3학년 학생이 쓰러졌고 깨워도 반응이 없어요."
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={4}
-          className="min-h-[100px] resize-none text-base"
+          className="min-h-[112px] resize-none border-slate-200 bg-slate-50/70 text-base leading-relaxed focus-visible:bg-white"
           onKeyDown={(e) => {
             if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
               e.preventDefault()
@@ -127,10 +127,10 @@ export function QuickEntry({ onResult }: QuickEntryProps) {
         <div className="flex flex-wrap gap-2">
           <Button
             size="lg"
-            className="min-h-11 flex-1"
+            className="min-h-11 flex-1 bg-red-600 hover:bg-red-700"
             onClick={() => runAnalyze()}
           >
-            바로 결과 보기
+            3C 결과 보기
           </Button>
           <Button
             type="button"
@@ -149,7 +149,7 @@ export function QuickEntry({ onResult }: QuickEntryProps) {
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Ctrl+Enter로도 바로 분석 · 음성은 크롬·엣지에서 잘 됩니다
+          Ctrl+Enter로 분석할 수 있습니다. 음성 입력은 지원 브라우저에서만 작동합니다.
         </p>
 
         <div className="flex flex-wrap gap-1.5">
@@ -161,9 +161,9 @@ export function QuickEntry({ onResult }: QuickEntryProps) {
                 setText(example)
                 runAnalyze(example)
               }}
-              className="rounded-full border bg-muted/50 px-2.5 py-1 text-left text-xs hover:bg-muted"
+              className="rounded-md border bg-white px-2.5 py-1.5 text-left text-xs text-slate-700 hover:bg-slate-50"
             >
-              {example.length > 28 ? `${example.slice(0, 28)}…` : example}
+              {example.length > 28 ? `${example.slice(0, 28)}...` : example}
             </button>
           ))}
         </div>

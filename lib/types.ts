@@ -11,22 +11,28 @@ export type Screen =
 
 export type InputMode = "quick" | "detailed"
 
-/** 가이드라인 표 1-2 기준 분류 */
 export type GuidelineClass =
-  | "emergency" // 응급증상 → 119
-  | "quasi" // 응급에 준하는 증상 → 응급실·신속 이송
-  | "observation" // 관찰 후 판단
-  | "health-office" // 보건실 처치
+  | "emergency"
+  | "quasi"
+  | "observation"
+  | "health-office"
 
 export type EmergencyLevel = 1 | 2 | 3 | 4
 
-/** 보건교사 4 Check + 핵심 위험 신호 (표 1-1, 1-2) */
+export type SourceRef = {
+  id: string
+  institution: string
+  title: string
+  url: string
+  note: string
+}
+
 export type TriageAnswers = {
-  collapsed: boolean | null // 의식 잃고 쓰러짐
-  noResponse: boolean | null // 깨워도 반응 없음
-  abnormalBreathing: boolean | null // 무호흡·심장정지 호흡
-  noPulse: boolean | null // 맥박 없음 (보건교사 확인)
-  chokingSign: boolean | null // 기도폐쇄 의심(말·기침 불가)
+  collapsed: boolean | null
+  noResponse: boolean | null
+  abnormalBreathing: boolean | null
+  noPulse: boolean | null
+  chokingSign: boolean | null
 }
 
 export type StudentInfo = {
@@ -39,7 +45,6 @@ export type EmergencyInput = {
   triage: TriageAnswers
   student: StudentInfo
   categoryId: string
-  /** 가이드라인 Check 항목 중 해당(V) 선택 */
   checkedFlags: string[]
   location: string
   notes: string
@@ -65,7 +70,6 @@ export type EmergencyResult = {
   department: string
   parentMessage: string
   healthJournal: string
-  /** 표 1-5 역할별 체크리스트 */
   roleChecklist: {
     discoverer: string[]
     healthTeacher: string[]
@@ -73,6 +77,7 @@ export type EmergencyResult = {
   }
   checklist: string[]
   disclaimer: string
+  sources: SourceRef[]
 }
 
 export type SavedCase = {
@@ -93,11 +98,11 @@ export type AppSettings = {
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  schoolName: "○○초등학교",
+  schoolName: "우리 학교",
   healthOfficePhone: "",
   nearestHospital: "",
   aedLocation: "",
 }
 
 export const GUIDELINE_SOURCE =
-  "교육부 「학교 응급상황 대응 가이드라인」(2025) · 3C(Check-Call-Care)"
+  "교육부 「학교 응급상황 대응 가이드라인」(2025), 서울특별시교육청 「학생안전매뉴얼」(2024.12 개정), 소방청 응급처치 안전교육"

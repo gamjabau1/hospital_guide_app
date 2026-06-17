@@ -3,17 +3,17 @@ import { Toaster } from "sonner"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "스쿨케어 SOS",
+  title: "병원 어디가?",
   description:
-    "한국 공식기관 응급처치 자료 기반 학교 3C 응급 대응 보조 앱",
-  generator: "스쿨케어 SOS",
+    "응급시 어떻게 해야할지 알려드리는 증상 기반 진료과 안내 웹앱",
+  generator: "Emergency Guide",
 }
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#c81e1e",
+  themeColor: "#fdf2f8",
 }
 
 export default function RootLayout({

@@ -1,5 +1,5 @@
-import { SchoolCareApp } from "@/components/school-care-app"
+import { EmergencyGuideApp } from "@/components/emergency-guide-app"
 
 export default function HomePage() {
-  return <SchoolCareApp />
+  return <EmergencyGuideApp />
 }

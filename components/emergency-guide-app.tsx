@@ -308,7 +308,7 @@ export function EmergencyGuideApp() {
   }
 
   return (
-    <ScreenShell title="어디로 가야 해?" subtitle="일상 속 작은 응급처치를 빠르게 확인해요">
+    <ScreenShell title="병원 어디가?" subtitle="일상 속 작은 응급처치를 빠르게 확인해요">
       <section className="mx-auto max-w-3xl space-y-5">
         <Card className="overflow-hidden rounded-[2rem] border-white/80 bg-white/90 shadow-sm shadow-pink-100/50">
           <CardContent className="space-y-5 p-5">

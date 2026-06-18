@@ -29,4 +29,4 @@ export type SymptomResult = {
 }
 
 export const GUIDELINE_SOURCE =
-  "소방청 응급처치 안전교육, 질병관리청 국가건강정보포털"
+  "NHS, MedlinePlus, CDC 공개 자료를 바탕으로 앱용으로 재구성한 생활 응급처치 안내"

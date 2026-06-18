@@ -1,23 +1,29 @@
-# 병원 어디가?
+# 어디로 가야 해?
 
-증상을 검색하거나 선택하면 응급도, 추천 진료과, 지금 해야 할 행동, 위험 신호를 안내하는 모바일 우선 웹앱입니다.
+일상 속 작은 응급처치가 필요할 때 증상을 검색하거나 선택하면, 집에서 먼저 해볼 수 있는 처치와 방문을 고려할 진료과를 안내하는 모바일 우선 웹앱입니다.
 
-이 서비스는 진단이 아니며, 위급한 경우 즉시 119에 연락하세요.
+이 서비스는 의료 진단이 아니며, 위급한 경우 즉시 119에 연락해야 합니다.
 
 ## 주요 기능
 
-- 큰 검색창과 빠른 증상 버튼으로 증상 안내 진입
-- 긴급 / 빠른 진료 권장 / 일반 진료 응급도 표시
-- 추천 진료과, 바로 해야 할 일 3개, 금지 행동, 위험 신호 제공
-- 공식기관 자료 출처와 의료 면책 문구 표시
+- 증상 검색과 빠른 증상 버튼
+- 일상 처치 / 빠른 진료 권장 / 긴급 안내 수준 표시
+- 추천 진료과, 지금 해볼 수 있는 처치, 하지 말아야 할 행동, 위험 신호 제공
+- 공개 자료 출처와 의료 면책 문구 표시
 
-## 공식 출처
+## 출처와 저작권
 
-앱 내용은 다음 공식 기관 자료를 바탕으로 정리했습니다.
+앱의 응급처치 안내 문구는 아래 공개 자료를 참고해 원문을 그대로 복제하지 않고 앱용으로 재구성했습니다.
 
-- 소방청, 응급처치 안전교육 자료: https://www.nfa.go.kr/nfa/safetyinfo/lifesafety/0001/
-- 질병관리청 국가건강정보포털: https://health.kdca.go.kr/
-공식 자료는 개정될 수 있으므로 배포 전후로 문서 날짜와 내용을 주기적으로 확인하는 것을 권장합니다.
+- NHS: https://www.nhs.uk/our-policies/terms-and-conditions/
+- MedlinePlus: https://medlineplus.gov/about/using/usingcontent/
+- CDC: https://www.cdc.gov/other/agencymaterials.html
+
+NHS 자료는 Open Government Licence v3.0 조건을 따릅니다.
+Contains public sector information licensed under the Open Government Licence v3.0.
+
+MedlinePlus 자료 중 A.D.A.M. Medical Encyclopedia, 약물 monograph, 이미지 등 별도 저작권이 있는 콘텐츠는 사용하지 않았습니다.
+CDC 로고, 기관 명칭을 통한 보증 표현, 제3자 이미지 또는 별도 저작권 자료는 사용하지 않았습니다.
 
 ## 실행 방법
 
@@ -31,17 +37,15 @@ npm run dev
 ## 검증
 
 ```bash
-npx tsc --noEmit
 npm run build
 ```
 
 ## 배포
 
-Vercel 배포 기준 권장 설정입니다.
+일반 웹 배포는 Vercel 기준으로 가능합니다.
 
 - Framework Preset: Next.js
 - Build Command: `npm run build`
 - Install Command: `npm install`
-- Output Directory: Next.js 기본값 사용
 
-GitHub 저장소를 Vercel에 연결하면 `main` 브랜치에 푸시될 때 자동 배포할 수 있습니다.
+앱인토스 출품용으로는 별도의 앱인토스 프로젝트 구조에서 `.ait` 번들을 생성해 콘솔에 업로드해야 합니다.

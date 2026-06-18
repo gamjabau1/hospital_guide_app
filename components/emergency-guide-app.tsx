@@ -44,7 +44,7 @@ export function EmergencyGuideApp() {
   function handleSearch() {
     const result = resolveSymptom(query)
     if (!result) {
-      toast.error("증상을 찾지 못했습니다. 빠른 증상 버튼을 선택해 주세요.")
+      toast.error("증상을 찾지 못했어요. 빠른 증상 버튼을 선택해 주세요.")
       return
     }
     selectSymptom(result.guide)
@@ -78,7 +78,7 @@ export function EmergencyGuideApp() {
             <CardContent className="space-y-3 p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium opacity-80">응급도</p>
+                  <p className="text-sm font-medium opacity-80">안내 수준</p>
                   <h2 className="text-3xl font-black">{meta.label}</h2>
                 </div>
                 <Badge className={`${meta.badgeClass} rounded-full px-3 py-1`}>
@@ -93,7 +93,7 @@ export function EmergencyGuideApp() {
             <CardHeader>
               <CardTitle className="text-base text-sky-950">추천 진료과</CardTitle>
               <CardDescription className="text-sky-900">
-                증상에 맞춰 방문을 고려할 수 있는 진료과입니다.
+                증상에 따라 방문을 고려할 수 있는 진료과입니다.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
@@ -111,7 +111,7 @@ export function EmergencyGuideApp() {
           <div className="grid gap-4 md:grid-cols-2">
             <Card className="rounded-[2rem] border-violet-100 bg-white/95 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base">지금 해야 할 일 3개</CardTitle>
+                <CardTitle className="text-base">지금 해볼 수 있는 처치</CardTitle>
               </CardHeader>
               <CardContent>
                 <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed">
@@ -124,7 +124,7 @@ export function EmergencyGuideApp() {
 
             <Card className="rounded-[2rem] border-rose-100 bg-white/95 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base text-rose-700">절대 하면 안 되는 행동</CardTitle>
+                <CardTitle className="text-base text-rose-700">하지 말아야 할 행동</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm leading-relaxed">
@@ -160,7 +160,7 @@ export function EmergencyGuideApp() {
           {sources.length > 0 && (
             <Card className="rounded-[2rem] bg-white/95 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base">참고한 공식 자료</CardTitle>
+                <CardTitle className="text-base">참고한 공개 자료</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 {sources.map((source) => (
@@ -186,7 +186,7 @@ export function EmergencyGuideApp() {
   }
 
   return (
-    <ScreenShell title="병원 어디가?" subtitle="응급시 어떻게 해야할지 알려드려요.">
+    <ScreenShell title="어디로 가야 해?" subtitle="일상 속 작은 응급처치를 빠르게 확인해요">
       <section className="mx-auto max-w-3xl space-y-5">
         <Card className="overflow-hidden rounded-[2rem] border-white/80 bg-white/90 shadow-sm shadow-pink-100/50">
           <CardContent className="space-y-5 p-5">
@@ -196,7 +196,7 @@ export function EmergencyGuideApp() {
                 어디가 불편한가요?
               </h2>
               <p className="text-sm font-medium text-slate-600">
-                증상을 선택하거나 검색하면 응급도와 추천 진료과를 안내합니다.
+                증상을 선택하거나 검색하면 응급처치 방법과 방문을 고려할 진료과를 안내합니다.
               </p>
             </div>
             <div className="flex gap-2">
@@ -209,7 +209,7 @@ export function EmergencyGuideApp() {
                     if (event.key === "Enter") handleSearch()
                   }}
                   className="min-h-14 rounded-full border-pink-100 bg-pink-50/70 pl-10 text-base shadow-inner focus-visible:bg-white"
-                  placeholder="어디가 불편한가요?"
+                  placeholder="예: 살짝 베였어요"
                   aria-label="증상 검색"
                 />
               </div>

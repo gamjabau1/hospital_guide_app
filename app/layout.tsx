@@ -3,9 +3,8 @@ import { Toaster } from "sonner"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "병원 어디가?",
-  description:
-    "응급시 어떻게 해야할지 알려드리는 증상 기반 진료과 안내 웹앱",
+  title: "어디로 가야 해?",
+  description: "일상 속 작은 응급처치와 방문을 고려할 진료과를 빠르게 안내하는 미니앱",
   generator: "Emergency Guide",
 }
 

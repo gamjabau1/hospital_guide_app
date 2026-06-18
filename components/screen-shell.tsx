@@ -36,7 +36,7 @@ export function ScreenShell({
                 variant="ghost"
                 size="icon"
                 onClick={onBack}
-                aria-label="뒤로"
+                aria-label="뒤로가기"
                 className="rounded-full"
               >
                 <ArrowLeft className="size-5" />

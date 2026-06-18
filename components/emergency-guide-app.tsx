@@ -187,6 +187,9 @@ export function EmergencyGuideApp() {
                   </a>
                 </Button>
               </div>
+              <p className="text-xs leading-relaxed text-sky-800">
+                네이버지도 검색 결과로 이동합니다. 위치 정보는 이 앱에서 수집하지 않습니다.
+              </p>
             </CardContent>
           </Card>
 

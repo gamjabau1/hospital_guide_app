@@ -39,4 +39,4 @@ export type SymptomResult = {
 }
 
 export const GUIDELINE_SOURCE =
-  "NHS, MedlinePlus, CDC 공개 자료를 바탕으로 앱용으로 재구성한 생활 응급처치 안내"
+  "NHS, CDC, NINDS 등 공개 기관 자료를 바탕으로 앱용으로 재구성한 진료과 안내"

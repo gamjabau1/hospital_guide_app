@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Phone, Search } from "lucide-react"
+import { ClipboardList, MapPin, Phone, Pill, Search } from "lucide-react"
 import { toast } from "sonner"
 import { ScreenShell } from "@/components/screen-shell"
 import { Badge } from "@/components/ui/badge"
@@ -16,28 +16,44 @@ import {
   resolveSymptom,
   searchSymptoms,
 } from "@/lib/emergency-engine"
-import type { Screen, SymptomGuide } from "@/lib/types"
+import type { EmergencyLevel, Screen, SymptomGuide } from "@/lib/types"
 
 const QUICK_SYMPTOMS = QUICK_SYMPTOM_IDS.map(getSymptom).filter(Boolean) as SymptomGuide[]
 
-function levelAccent(level: SymptomGuide["emergencyLevel"]) {
+function levelAccent(level: EmergencyLevel) {
   if (level === "urgent") return "border-rose-200 bg-rose-50 text-rose-950"
   if (level === "soon") return "border-amber-200 bg-amber-50 text-amber-950"
   return "border-sky-200 bg-sky-50 text-sky-950"
+}
+
+function naverMapSearchUrl(query: string) {
+  return `https://map.naver.com/p/search/${encodeURIComponent(query)}`
+}
+
+function getTriageLevel(selected: SymptomGuide, answers: Record<string, boolean>): EmergencyLevel {
+  const yesQuestions = selected.triageQuestions.filter((question) => answers[question.id])
+  if (yesQuestions.some((question) => question.urgent)) return "urgent"
+  if (yesQuestions.length > 0 && selected.emergencyLevel === "routine") return "soon"
+  return selected.emergencyLevel
 }
 
 export function EmergencyGuideApp() {
   const [screen, setScreen] = useState<Screen>("home")
   const [query, setQuery] = useState("")
   const [selected, setSelected] = useState<SymptomGuide | undefined>()
+  const [triageAnswers, setTriageAnswers] = useState<Record<string, boolean>>({})
 
   const suggestions = useMemo(() => searchSymptoms(query).slice(0, 4), [query])
-  const meta = selected ? getLevelMeta(selected.emergencyLevel) : undefined
+  const triageLevel = selected ? getTriageLevel(selected, triageAnswers) : undefined
+  const meta = triageLevel ? getLevelMeta(triageLevel) : undefined
   const sources = selected ? getSymptomSources(selected) : []
+  const recommendedDepartment = selected?.recommendedDepartments[0] ?? "병원"
+  const yesAnswers = selected?.triageQuestions.filter((question) => triageAnswers[question.id]) ?? []
 
   function selectSymptom(symptom: SymptomGuide) {
     setSelected(symptom)
     setQuery(symptom.name)
+    setTriageAnswers({})
     setScreen("result")
   }
 
@@ -48,6 +64,10 @@ export function EmergencyGuideApp() {
       return
     }
     selectSymptom(result.guide)
+  }
+
+  function updateTriageAnswer(id: string, value: boolean) {
+    setTriageAnswers((current) => ({ ...current, [id]: value }))
   }
 
   if (screen === "result" && selected && meta) {
@@ -78,7 +98,7 @@ export function EmergencyGuideApp() {
             <CardContent className="space-y-3 p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium opacity-80">안내 수준</p>
+                  <p className="text-sm font-medium opacity-80">문진 반영 안내</p>
                   <h2 className="text-3xl font-black">{meta.label}</h2>
                 </div>
                 <Badge className={`${meta.badgeClass} rounded-full px-3 py-1`}>
@@ -86,6 +106,48 @@ export function EmergencyGuideApp() {
                 </Badge>
               </div>
               <p className="text-sm leading-relaxed">{meta.summary}</p>
+              {yesAnswers.length > 0 && (
+                <div className="space-y-1 rounded-3xl bg-white/70 p-3 text-sm">
+                  {yesAnswers.map((answer) => (
+                    <p key={answer.id}>• {answer.ifYes}</p>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-[2rem] bg-white/95 shadow-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ClipboardList className="size-4" />
+                짧은 문진
+              </CardTitle>
+              <CardDescription>
+                해당되는 항목을 고르면 안내 수준이 더 보수적으로 바뀝니다.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {selected.triageQuestions.map((question) => (
+                <div key={question.id} className="rounded-3xl border border-slate-100 bg-slate-50 p-3">
+                  <p className="text-sm font-semibold text-slate-950">{question.question}</p>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <Button
+                      variant={triageAnswers[question.id] === true ? "default" : "outline"}
+                      className="rounded-full"
+                      onClick={() => updateTriageAnswer(question.id, true)}
+                    >
+                      예
+                    </Button>
+                    <Button
+                      variant={triageAnswers[question.id] === false ? "default" : "outline"}
+                      className="rounded-full"
+                      onClick={() => updateTriageAnswer(question.id, false)}
+                    >
+                      아니요
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </CardContent>
           </Card>
 
@@ -93,18 +155,38 @@ export function EmergencyGuideApp() {
             <CardHeader>
               <CardTitle className="text-base text-sky-950">추천 진료과</CardTitle>
               <CardDescription className="text-sky-900">
-                증상에 따라 방문을 고려할 수 있는 진료과입니다.
+                가장 먼저 고려할 진료과는 {recommendedDepartment}입니다.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-wrap gap-2">
-              {selected.recommendedDepartments.map((department) => (
-                <Badge
-                  key={department}
-                  className="rounded-full bg-white px-3 py-1 text-sm text-sky-950 shadow-sm hover:bg-white"
-                >
-                  {department}
-                </Badge>
-              ))}
+            <CardContent className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                {selected.recommendedDepartments.map((department) => (
+                  <Badge
+                    key={department}
+                    className="rounded-full bg-white px-3 py-1 text-sm text-sky-950 shadow-sm hover:bg-white"
+                  >
+                    {department}
+                  </Badge>
+                ))}
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <Button className="min-h-12 rounded-full" asChild>
+                  <a
+                    href={naverMapSearchUrl(`내 주변 ${recommendedDepartment}`)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <MapPin className="size-4" />
+                    네이버지도에서 {recommendedDepartment} 찾기
+                  </a>
+                </Button>
+                <Button variant="outline" className="min-h-12 rounded-full bg-white" asChild>
+                  <a href={naverMapSearchUrl("내 주변 약국")} target="_blank" rel="noreferrer">
+                    <Pill className="size-4" />
+                    네이버지도에서 약국 찾기
+                  </a>
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
@@ -137,6 +219,43 @@ export function EmergencyGuideApp() {
               </CardContent>
             </Card>
           </div>
+
+          <Card className="rounded-[2rem] border-emerald-100 bg-emerald-50/80 shadow-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base text-emerald-950">
+                <Pill className="size-4" />
+                약국에서 물어볼 수 있는 물품
+              </CardTitle>
+              <CardDescription className="text-emerald-900">
+                증상과 나이, 복용 중인 약을 말하고 정확한 사항은 약사와 상의하세요.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-2">
+              {selected.pharmacyItems.map((item) => (
+                <Badge
+                  key={item}
+                  className="rounded-full bg-white px-3 py-1 text-emerald-950 shadow-sm hover:bg-white"
+                >
+                  {item}
+                </Badge>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-[2rem] border-indigo-100 bg-white/95 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-base text-indigo-950">병원 갈 때 준비할 것</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="grid gap-2 text-sm leading-relaxed sm:grid-cols-2">
+                {selected.hospitalPrepItems.map((item) => (
+                  <li key={item} className="rounded-2xl bg-indigo-50 px-3 py-2 text-indigo-950">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
 
           <Card className="rounded-[2rem] border-amber-200 bg-amber-50/80 shadow-sm">
             <CardHeader>
@@ -196,7 +315,7 @@ export function EmergencyGuideApp() {
                 어디가 불편한가요?
               </h2>
               <p className="text-sm font-medium text-slate-600">
-                증상을 선택하거나 검색하면 응급처치 방법과 방문을 고려할 진료과를 안내합니다.
+                증상을 선택하거나 검색하면 문진, 응급처치, 진료과, 약국 물품을 안내합니다.
               </p>
             </div>
             <div className="flex gap-2">

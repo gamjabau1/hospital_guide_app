@@ -10,6 +10,13 @@ export type SourceRef = {
   note: string
 }
 
+export type TriageQuestion = {
+  id: string
+  question: string
+  ifYes: string
+  urgent?: boolean
+}
+
 export type SymptomGuide = {
   id: string
   name: string
@@ -20,6 +27,9 @@ export type SymptomGuide = {
   firstAidSteps: string[]
   warningSigns: string[]
   avoidActions: string[]
+  triageQuestions: TriageQuestion[]
+  pharmacyItems: string[]
+  hospitalPrepItems: string[]
   sourceIds: string[]
 }
 

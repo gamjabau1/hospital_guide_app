@@ -1,4 +1,4 @@
-import type { SourceRef, SymptomGuide } from "./types"
+﻿import type { SourceRef, SymptomGuide } from "./types"
 
 const COMMON_HOSPITAL_PREP = [
   "증상이 시작된 시간과 변화를 메모하기",
@@ -72,8 +72,8 @@ export const SYMPTOMS: SymptomGuide[] = [
   },
   {
     id: "facial-droop",
-    name: "얼굴 한쪽이 마비된 것 같아요",
-    shortLabel: "구안와사 의심",
+    name: "얼굴 한쪽 마비/입 돌아감",
+    shortLabel: "안면마비/구안와사",
     keywords: ["구안와사", "입 돌아감", "안면마비", "얼굴 마비", "얼굴 한쪽", "눈 안 감김", "말 어눌"],
     emergencyLevel: "soon",
     recommendedDepartments: ["신경과", "응급의학과", "이비인후과"],
@@ -264,3 +264,4 @@ export function getSources(ids: string[]): SourceRef[] {
   const required = new Set(ids)
   return OFFICIAL_SOURCES.filter((source) => required.has(source.id))
 }
+

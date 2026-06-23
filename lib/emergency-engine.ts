@@ -11,20 +11,20 @@ export const LEVEL_META: Record<
   urgent: {
     label: "긴급",
     summary: "생명과 직결될 수 있어 119 또는 응급실을 우선 고려해야 합니다.",
-    badgeClass: "bg-red-600 text-white",
-    panelClass: "border-red-200 bg-red-50 text-red-950",
+    badgeClass: "bg-stone-800 text-white",
+    panelClass: "border-stone-200 bg-stone-50 text-stone-950",
   },
   soon: {
     label: "빠른 진료 권장",
     summary: "상태가 나빠질 수 있어 빠른 진료 또는 응급실 진료를 권장합니다.",
-    badgeClass: "bg-orange-500 text-white",
-    panelClass: "border-orange-200 bg-orange-50 text-orange-950",
+    badgeClass: "bg-amber-500 text-white",
+    panelClass: "border-amber-200 bg-amber-50 text-amber-950",
   },
   routine: {
     label: "일반 진료/관찰",
     summary: "가벼운 증상은 변화를 살피고, 호전되지 않으면 일반 진료를 고려하세요.",
-    badgeClass: "bg-emerald-600 text-white",
-    panelClass: "border-emerald-200 bg-emerald-50 text-emerald-950",
+    badgeClass: "bg-indigo-700 text-white",
+    panelClass: "border-indigo-100 bg-indigo-50 text-indigo-950",
   },
 }
 

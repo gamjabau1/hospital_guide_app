@@ -102,7 +102,7 @@ export function EmergencyGuideApp() {
             <CardContent className="space-y-3 p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium opacity-80">문진 반영 안내</p>
+                  <p className="text-sm font-medium opacity-80">답변 반영 안내</p>
                   <h2 className="text-3xl font-semibold">{meta.label}</h2>
                 </div>
                 <Badge className={`${meta.badgeClass} rounded-full px-3 py-1`}>
@@ -124,7 +124,7 @@ export function EmergencyGuideApp() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <ClipboardList className="size-4" />
-                짧은 문진
+                증상 확인
               </CardTitle>
               <CardDescription>
                 해당되는 항목을 고르면 안내 수준이 더 보수적으로 바뀝니다.
@@ -157,9 +157,9 @@ export function EmergencyGuideApp() {
 
           <Card className="rounded-[2rem] border-indigo-100 bg-indigo-50/80 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-base text-indigo-950">추천 진료과</CardTitle>
+              <CardTitle className="text-base text-indigo-950">참고 진료과</CardTitle>
               <CardDescription className="text-indigo-900">
-                가장 먼저 고려할 진료과는 {recommendedDepartment}입니다.
+                증상에 따라 상담해볼 수 있는 진료과입니다.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -174,9 +174,13 @@ export function EmergencyGuideApp() {
                 ))}
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
-                <Button variant="outline" className="min-h-12 rounded-full bg-white" asChild>
+                <Button
+                  variant="outline"
+                  className="min-h-12 rounded-full border-[#f6d64a] bg-[#FEE500] text-[#191919] shadow-sm hover:bg-[#f7d900]"
+                  asChild
+                >
                   <a
-                    href={kakaoMapSearchUrl(`??二쇰? ${recommendedDepartment}`)}
+                    href={kakaoMapSearchUrl(`내 주변 ${recommendedDepartment}`)}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -184,7 +188,10 @@ export function EmergencyGuideApp() {
                     카카오지도에서 {recommendedDepartment} 찾기
                   </a>
                 </Button>
-                <Button className="min-h-12 rounded-full" asChild>
+                <Button
+                  className="min-h-12 rounded-full bg-[#03C75A] text-white shadow-sm hover:bg-[#02b351]"
+                  asChild
+                >
                   <a
                     href={naverMapSearchUrl(`내 주변 ${recommendedDepartment}`)}
                     target="_blank"
@@ -201,14 +208,14 @@ export function EmergencyGuideApp() {
                   </a>
                 </Button>
                 <Button variant="outline" className="min-h-12 rounded-full bg-white" asChild>
-                  <a href={kakaoMapSearchUrl("??二쇰? ?쎄뎅")} target="_blank" rel="noreferrer">
+                  <a href={kakaoMapSearchUrl("내 주변 약국")} target="_blank" rel="noreferrer">
                     <Pill className="size-4" />
                     카카오지도에서 약국 찾기
                   </a>
                 </Button>
               </div>
               <p className="text-xs leading-relaxed text-indigo-800">
-                네이버지도 검색 결과로 이동합니다. 위치 정보는 이 앱에서 수집하지 않습니다.
+                외부 지도 서비스 검색 결과로 이동합니다. 위치 정보는 이 앱에서 수집하지 않습니다.
               </p>
             </CardContent>
           </Card>
@@ -338,7 +345,7 @@ export function EmergencyGuideApp() {
                 어디가 불편한가요?
               </h2>
               <p className="text-sm font-medium text-slate-600">
-                증상을 선택하거나 검색하면 문진, 응급처치, 진료과, 약국 물품을 안내합니다.
+                증상을 선택하거나 검색하면 증상 확인, 응급처치, 진료과, 약국 물품을 안내합니다.
               </p>
             </div>
             <div className="flex gap-2">

@@ -4,7 +4,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "병원 어디가?",
-  description: "증상을 짧게 확인하고 응급처치, 위험 신호, 추천 진료과, 병원 방문 준비물을 안내하는 미니앱",
+  description: "증상을 짧게 확인하고 응급처치, 위험 신호, 참고 진료과, 병원 방문 준비물을 안내하는 미니앱",
   generator: "Hospital Guide",
 }
 
